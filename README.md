@@ -1,2 +1,12 @@
-# itone
-• iTone is a SwiftUI music search app built with Swift 6 and MVVM, using Swift concurrency, paginated iTunes API search, a   replaceable network layer, SwiftData caching for an offline-first experience, and automated tests.
+# iTone
+
+iTone is an iOS app built as a code challenge to search songs using the Apple iTunes API.
+
+## Tech Stack
+
+- Swift 6
+- SwiftUI
+- MVVM
+- Swift Concurrency
+- SwiftData
+- XCTest
