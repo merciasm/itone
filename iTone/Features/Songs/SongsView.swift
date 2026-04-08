@@ -206,7 +206,6 @@ struct SongsView: View {
                     }
                 }
             }
-            
 
             if viewModel.viewState == .loading {
                 HStack {
@@ -274,16 +273,16 @@ private struct PreviewSongsRepository: SongRepositoryProtocol {
     func markAsPlayed(_ song: Song) async throws {}
     func getRecentlyPlayed(limit: Int) async throws -> [Song] { Self.previewSongs }
 
-    static let previewSongs: [Song] = (1...2).map { i in
+    static let previewSongs: [Song] = (1...2).map { index in
         Song(
-            id: i,
-            name: ["Test Song", "Test Song 2"][i - 1],
+            id: index,
+            name: ["Test Song", "Test Song 2"][index - 1],
             artistName: "Test Artist",
             collectionId: 1499209861,
             collectionName: "Test Album",
             artworkUrl: URL(string: ""),
             previewUrl: nil,
-            trackNumber: i
+            trackNumber: index
         )
     }
 }

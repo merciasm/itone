@@ -345,6 +345,7 @@ struct SongModelTests {
 }
 
 // MARK: - PlayerViewModel Tests
+
 @Suite("PlayerViewModel Tests")
 @MainActor
 struct PlayerViewModelTests {
@@ -366,8 +367,7 @@ struct PlayerViewModelTests {
 
     @Test("Play starts playback")
     func playStartsPlayback() {
-        let repository = MockSongRepository()
-        let (viewModel, player) = makePlayerViewModel(repository: repository)
+        let (viewModel, player) = makePlayerViewModel()
         viewModel.play()
         #expect(player.isPlaying)
         #expect(player.playedURLs.count == 1)
@@ -475,5 +475,3 @@ struct PlayerViewModelTests {
         #expect(viewModel.hasNext)
     }
 }
-
-

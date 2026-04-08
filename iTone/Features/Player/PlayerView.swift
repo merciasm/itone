@@ -146,7 +146,9 @@ struct PlayerView: View {
                 in: 0...1
             )
             .accessibilityLabel("Song progress")
-            .accessibilityValue("\(viewModel.formattedTime(viewModel.currentTime)) of \(viewModel.formattedTime(viewModel.duration))")
+            .accessibilityValue(
+                "\(viewModel.formattedTime(viewModel.currentTime)) of \(viewModel.formattedTime(viewModel.duration))"
+            )
             .tint(.primaryText.opacity(0.6))
             .frame(height: 24)
 
@@ -205,6 +207,7 @@ struct PlayerView: View {
         }
     }
 }
+
 // MARK: - Preview
 
 #Preview {
@@ -224,4 +227,3 @@ struct PlayerView: View {
             .environment(AppCoordinator())
     }
 }
-

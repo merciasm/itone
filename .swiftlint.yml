@@ -1,0 +1,17 @@
+excluded:
+  - .build
+  - DerivedData
+  - iToneUITests
+  - iToneUITestsLaunchTests
+
+disabled_rules:
+  - todo
+  - trailing_comma
+
+type_name:
+  excluded:
+    - iToneApp
+    - iTunesAPI
+    - iTunesSearchResponse
+    - iTunesTrackDTO
+    - iToneModelContainer

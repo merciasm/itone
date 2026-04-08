@@ -71,7 +71,6 @@ struct AlbumView: View {
 
     // MARK: - Album Content
 
-
     private func albumContent(album: Album) -> some View {
         List {
             // Album header
@@ -133,16 +132,16 @@ private struct PreviewRepository: SongRepositoryProtocol {
 }
 
 #Preview {
-    let songs: [Song] = (1...4).map { i in
+    let songs: [Song] = (1...4).map { index in
         Song(
-            id: i,
-            name: ["Testing", "Another music", "This is a test", "A new song"][i - 1],
+            id: index,
+            name: ["Testing", "Another music", "This is a test", "A new song"][index - 1],
             artistName: "Test Artist",
             collectionId: 1499209861,
             collectionName: "Test Album",
             artworkUrl: URL(string: ""),
             previewUrl: nil,
-            trackNumber: i
+            trackNumber: index
         )
     }
     let album = Album(
@@ -168,4 +167,3 @@ private struct PreviewRepository: SongRepositoryProtocol {
             .environment(AppCoordinator())
     }
 }
-

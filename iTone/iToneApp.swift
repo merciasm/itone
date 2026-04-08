@@ -14,7 +14,7 @@ struct iToneApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView() 
+            RootView()
                 .environment(coordinator)
                 .modelContainer(iToneModelContainer.shared)
                 .preferredColorScheme(ColorScheme.dark)

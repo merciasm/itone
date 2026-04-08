@@ -53,4 +53,3 @@ struct MoreOptionsSheet: View {
         .presentationDragIndicator(.visible)
     }
 }
-
