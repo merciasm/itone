@@ -9,8 +9,8 @@ import Foundation
 
 // MARK: - Song Repository Protocol
 protocol SongRepositoryProtocol: Sendable {
-    /// Search songs with pagination. Serves cache first, then fetches from network.
-    func searchSongs(query: String, offset: Int) async throws -> [Song]
+    /// Search songs. Serves cache first, then fetches from network.
+    func searchSongs(query: String) async throws -> [Song]
 
     /// Get all tracks for an album by collection ID.
     func getAlbumSongs(collectionId: Int) async throws -> Album

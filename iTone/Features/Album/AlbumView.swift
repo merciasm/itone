@@ -125,7 +125,7 @@ struct AlbumView: View {
 private struct PreviewRepository: SongRepositoryProtocol {
     let album: Album
 
-    func searchSongs(query: String, offset: Int) async throws -> [Song] { [] }
+    func searchSongs(query: String) async throws -> [Song] { [] }
     func getAlbumSongs(collectionId: Int) async throws -> Album { album }
     func markAsPlayed(_ song: Song) async throws {}
     func getRecentlyPlayed(limit: Int) async throws -> [Song] { [] }

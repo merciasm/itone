@@ -12,18 +12,24 @@ import SwiftData
 final class SongRepositoryImpl: SongRepositoryProtocol {
     private let networkService: NetworkServiceProtocol
     private let modelContainer: ModelContainer
+    private var refreshTask: Task<Void, Never>?
 
     init(networkService: NetworkServiceProtocol, modelContainer: ModelContainer) {
         self.networkService = networkService
         self.modelContainer = modelContainer
     }
 
-    // MARK: - Search Songs (cache-first)
-    func searchSongs(query: String, offset: Int) async throws -> [Song] {
-        if offset == 0, let cached = try? await getCachedSongs(for: query), !cached.isEmpty {
-            return cached
+    // MARK: - Search Songs (cache-first, network-refresh)
+    func searchSongs(query: String) async throws -> [Song] {
+        refreshTask?.cancel()
+
+        let cached = (try? await getCachedSongs(for: query)) ?? []
+        if cached.isEmpty {
+            return try await fetchAndCacheSongs(query: query)
         }
-        return try await fetchAndCacheSongs(query: query, offset: offset)
+        // Return cache immediately; refresh in the background so the next search is fresh
+        refreshTask = Task { try? await fetchAndCacheSongs(query: query) }
+        return cached
     }
 
     // MARK: - Album Songs
@@ -88,13 +94,19 @@ final class SongRepositoryImpl: SongRepositoryProtocol {
         return try context.fetch(descriptor).map { $0.toDomain() }
     }
 
-    private func fetchAndCacheSongs(query: String, offset: Int) async throws -> [Song] {
-        let endpoint = iTunesAPI.searchSongs(query: query, offset: offset)
+    private func fetchAndCacheSongs(query: String) async throws -> [Song] {
+        let endpoint = iTunesAPI.searchSongs(query: query)
         let response: iTunesSearchResponse = try await networkService.request(endpoint)
         let songs = response.results.compactMap { $0.toDomain() }
 
         await MainActor.run {
             let context = modelContainer.mainContext
+            let descriptor = FetchDescriptor<CachedSong>(
+                predicate: #Predicate { $0.searchQuery == query }
+            )
+            if let stale = try? context.fetch(descriptor) {
+                for entry in stale { context.delete(entry) }
+            }
             for song in songs {
                 let cached = CachedSong(from: song, searchQuery: query)
                 context.insert(cached)

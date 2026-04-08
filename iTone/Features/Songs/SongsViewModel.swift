@@ -17,6 +17,10 @@ enum ViewState: Equatable {
 }
 
 // MARK: - Songs ViewModel
+
+/// Uses client-side pagination because the iTunes Search API lacks server-side
+/// offset support (see iTunesAPI.swift). All results are fetched once; `songs`
+/// is a sliding window that grows by `pageSize` items as the user scrolls.
 @MainActor
 @Observable
 final class SongsViewModel {
@@ -24,10 +28,14 @@ final class SongsViewModel {
     var recentlyPlayed: [Song] = []
     var searchText: String = ""
     var viewState: ViewState = .idle
-    var hasMorePages: Bool = true
+    var hasMorePages: Bool = false
 
+    /// All fetched results (used as the full playlist when navigating to the player)
+    var allSongs: [Song] { allResults }
+
+    static let pageSize = 25
     private let repository: SongRepositoryProtocol
-    private var currentOffset: Int = 0
+    private var allResults: [Song] = []
     private var currentQuery: String = ""
     private var searchTask: Task<Void, Never>?
 
@@ -49,20 +57,22 @@ final class SongsViewModel {
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(400))
             guard !Task.isCancelled else { return }
-            await search(query: query, reset: true)
+            await search(query: query)
         }
     }
 
     func loadMore() {
-        guard hasMorePages, viewState != .loading, !currentQuery.isEmpty else { return }
-        Task { await search(query: currentQuery, reset: false) }
+        guard hasMorePages, viewState != .loading else { return }
+        let nextCount = min(songs.count + Self.pageSize, allResults.count)
+        songs = Array(allResults.prefix(nextCount))
+        hasMorePages = songs.count < allResults.count
     }
 
     func refresh() async {
         if currentQuery.isEmpty {
             await loadRecentlyPlayed()
         } else {
-            await search(query: currentQuery, reset: true)
+            await search(query: currentQuery)
         }
     }
 
@@ -76,29 +86,19 @@ final class SongsViewModel {
 
     // MARK: - Private
 
-    private func search(query: String, reset: Bool) async {
-        if reset {
-            currentOffset = 0
-            currentQuery = query
-            songs = []
-            hasMorePages = true
-        }
+    private func search(query: String) async {
+        currentQuery = query
 
         guard !Task.isCancelled else { return }
         viewState = .loading
 
         do {
-            let results = try await repository.searchSongs(query: query, offset: currentOffset)
+            let results = try await repository.searchSongs(query: query)
             guard !Task.isCancelled else { return }
 
-            if reset {
-                songs = results
-            } else {
-                songs.append(contentsOf: results)
-            }
-
-            currentOffset += results.count
-            hasMorePages = results.count >= iTunesAPI.pageSize
+            allResults = results
+            songs = Array(results.prefix(Self.pageSize))
+            hasMorePages = songs.count < allResults.count
             viewState = songs.isEmpty ? .empty : .loaded
         } catch {
             guard !Task.isCancelled else { return }
@@ -107,10 +107,10 @@ final class SongsViewModel {
     }
 
     private func resetSearch() {
+        allResults = []
         songs = []
-        currentOffset = 0
         currentQuery = ""
-        hasMorePages = true
+        hasMorePages = false
         viewState = .idle
     }
 }

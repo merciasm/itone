@@ -197,16 +197,17 @@ struct SongsView: View {
                 .onTapGesture {
                     coordinator.navigateToPlayer(
                         song: song,
-                        playlist: viewModel.songs
+                        playlist: viewModel.allSongs
                     )
                 }
                 .onAppear {
-                    if song == viewModel.songs.last {
+                    if song.id == viewModel.songs.last?.id {
                         viewModel.loadMore()
                     }
                 }
             }
 
+            // Shown during the initial network fetch; loadMore() is synchronous so no spinner needed
             if viewModel.viewState == .loading {
                 HStack {
                     Spacer()
@@ -266,7 +267,7 @@ struct SongsView: View {
 // MARK: - Preview
 
 private struct PreviewSongsRepository: SongRepositoryProtocol {
-    func searchSongs(query: String, offset: Int) async throws -> [Song] { [] }
+    func searchSongs(query: String) async throws -> [Song] { [] }
     func getAlbumSongs(collectionId: Int) async throws -> Album {
         Album(id: 0, name: "", artistName: "", artworkUrl: nil, songs: [])
     }

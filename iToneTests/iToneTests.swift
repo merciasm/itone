@@ -70,7 +70,7 @@ final class MockSongRepository: SongRepositoryProtocol {
     var markedAsPlayed: [Song] = []
     var shouldThrow: Error?
 
-    func searchSongs(query: String, offset: Int) async throws -> [Song] {
+    func searchSongs(query: String) async throws -> [Song] {
         if let error = shouldThrow { throw error }
         return searchResult
     }
@@ -117,21 +117,11 @@ extension Song {
 @Suite("Endpoint Tests")
 struct EndpointTests {
     @Test("Search endpoint builds correct URL")
-    func searchEndpointURL() {
-        let endpoint = iTunesAPI.searchSongs(query: "Daft Punk", offset: 0)
-        let url = endpoint.url
-        #expect(url != nil)
-        let urlString = url!.absoluteString
+    func searchEndpointURL() throws {
+        let endpoint = iTunesAPI.searchSongs(query: "Daft Punk")
+        let urlString = try #require(endpoint.url).absoluteString
         #expect(urlString.contains("itunes.apple.com"))
-        #expect(urlString.contains("limit=25"))
-        #expect(urlString.contains("offset=0"))
-    }
-
-    @Test("Search endpoint uses correct offset for pagination")
-    func searchEndpointPagination() {
-        let endpoint = iTunesAPI.searchSongs(query: "test", offset: 25)
-        let urlString = endpoint.url?.absoluteString ?? ""
-        #expect(urlString.contains("offset=25"))
+        #expect(urlString.contains("limit=200"))
     }
 
     @Test("Album lookup endpoint builds correct URL")
@@ -255,22 +245,68 @@ struct SongsViewModelTests {
         }
     }
 
-    @Test("loadMore appends songs to existing list")
-    func loadMoreAppendsSongs() async throws {
+    @Test("loadMore reveals next page of client-side results")
+    func loadMoreRevealsNextPage() async throws {
+        let page = SongsViewModel.pageSize
         let repository = MockSongRepository()
-        repository.searchResult = Array((1...25).map { Song.fixture(id: $0) })
+        repository.searchResult = (1...page * 2).map { Song.fixture(id: $0) }
         let viewModel = SongsViewModel(repository: repository)
 
         viewModel.searchText = "test"
         viewModel.onSearchTextChanged()
         try await Task.sleep(for: .milliseconds(600))
-        #expect(viewModel.songs.count == 25)
+        #expect(viewModel.songs.count == page)
+        #expect(viewModel.hasMorePages)
 
-        // Second page
-        repository.searchResult = Array((26...50).map { Song.fixture(id: $0) })
+        // Reveal next page (client-side, no network call)
         viewModel.loadMore()
-        try await Task.sleep(for: .milliseconds(200))
-        #expect(viewModel.songs.count == 50)
+        #expect(viewModel.songs.count == page * 2)
+        #expect(!viewModel.hasMorePages)
+    }
+
+    @Test("loadMore does nothing when hasMorePages is false")
+    func loadMoreNoOpWhenNoPagesLeft() async throws {
+        let repository = MockSongRepository()
+        repository.searchResult = (1...10).map { Song.fixture(id: $0) }
+        let viewModel = SongsViewModel(repository: repository)
+
+        viewModel.searchText = "test"
+        viewModel.onSearchTextChanged()
+        try await Task.sleep(for: .milliseconds(600))
+
+        // All 10 results fit in one page, so hasMorePages is false
+        #expect(viewModel.songs.count == 10)
+        #expect(!viewModel.hasMorePages)
+
+        viewModel.loadMore()
+        #expect(viewModel.songs.count == 10)
+    }
+
+    @Test("refresh re-fetches search results when query is active")
+    func refreshWithActiveQuery() async throws {
+        let repository = MockSongRepository()
+        repository.searchResult = [.fixture(id: 1)]
+        let viewModel = SongsViewModel(repository: repository)
+
+        viewModel.searchText = "test"
+        viewModel.onSearchTextChanged()
+        try await Task.sleep(for: .milliseconds(600))
+        #expect(viewModel.songs.count == 1)
+
+        // Update mock and refresh
+        repository.searchResult = [.fixture(id: 1), .fixture(id: 2)]
+        await viewModel.refresh()
+        #expect(viewModel.songs.count == 2)
+    }
+
+    @Test("refresh loads recently played when no query is active")
+    func refreshWithNoQuery() async throws {
+        let repository = MockSongRepository()
+        repository.recentlyPlayed = [.fixture(id: 10)]
+        let viewModel = SongsViewModel(repository: repository)
+
+        await viewModel.refresh()
+        #expect(viewModel.recentlyPlayed.count == 1)
     }
 
     @Test("Recently played songs are loaded on appear")

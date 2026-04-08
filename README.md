@@ -24,7 +24,7 @@ The only third-party dependency is SwiftLint (build tool plugin) for code style 
 
 ## Features
 
-- Song search with debounced input and infinite scroll pagination via the iTunes Search API
+- Song search with debounced input and client-side infinite scroll pagination
 - Audio preview playback with play/pause, next, previous, seek, and progress tracking
 - Album detail view with track listing, navigable from search results or the player
 - Recently played songs persisted locally with SwiftData
@@ -36,7 +36,7 @@ The only third-party dependency is SwiftLint (build tool plugin) for code style 
 
 ## Testing
 
-- 31 tests (unit + UI)
+- 33 tests (unit + UI)
 - Unit tests cover ViewModels, DTO mapping, endpoint construction, and domain models
 - UI tests cover app launch, search interaction, and launch performance
 - Run with Cmd+U or `xcodebuild test`
