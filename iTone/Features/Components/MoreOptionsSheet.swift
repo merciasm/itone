@@ -18,7 +18,6 @@ struct MoreOptionsSheet: View {
             VStack(alignment: .center) {
                 Text(song.name)
                     .font(.albumTitle)
-                    .fontWeight(.semibold)
                     .foregroundStyle(.primaryText)
                     .lineLimit(1)
                 Text(song.artistName)

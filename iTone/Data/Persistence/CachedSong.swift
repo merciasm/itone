@@ -10,7 +10,7 @@ import SwiftData
 
 // MARK: - Cached Song (SwiftData Model)
 @Model
-final class CachedSong {
+final class CachedSong: PersistableSong {
     @Attribute(.unique) var trackId: Int
     var trackName: String
     var artistName: String
@@ -35,16 +35,4 @@ final class CachedSong {
         self.cachedAt = Date()
     }
 
-    func toDomain() -> Song {
-        return Song(
-            id: trackId,
-            name: trackName,
-            artistName: artistName,
-            collectionId: collectionId,
-            collectionName: collectionName,
-            artworkUrl: artworkUrlString.flatMap { URL(string: $0) },
-            previewUrl: previewUrlString.flatMap { URL(string: $0) },
-            trackNumber: trackNumber
-        )
-    }
 }

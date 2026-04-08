@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct SongsView: View {
     @Environment(AppCoordinator.self) private var coordinator
-    @Environment(\.modelContext) private var modelContext
 
     @State private var viewModel: SongsViewModel
     @State private var songForOptions: Song?

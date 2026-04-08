@@ -7,31 +7,20 @@
 
 import Foundation
 
-// MARK: - HTTP Method
-enum HTTPMethod: String, Sendable {
-    case get = "GET"
-}
-
 // MARK: - Endpoint
 struct Endpoint: Sendable {
     nonisolated let baseURL: String
     nonisolated let path: String
     nonisolated let queryItems: [URLQueryItem]
-    nonisolated let method: HTTPMethod
-    nonisolated let headers: [String: String]
 
     nonisolated init(
         baseURL: String,
         path: String = "",
-        queryItems: [URLQueryItem] = [],
-        method: HTTPMethod = .get,
-        headers: [String: String] = [:]
+        queryItems: [URLQueryItem] = []
     ) {
         self.baseURL = baseURL
         self.path = path
         self.queryItems = queryItems
-        self.method = method
-        self.headers = headers
     }
 
     nonisolated var url: URL? {

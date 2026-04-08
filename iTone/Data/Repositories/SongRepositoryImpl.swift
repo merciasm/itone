@@ -18,11 +18,9 @@ final class SongRepositoryImpl: SongRepositoryProtocol {
         self.modelContainer = modelContainer
     }
 
-    // MARK: - Search Songs (offline-first)
+    // MARK: - Search Songs (cache-first)
     func searchSongs(query: String, offset: Int) async throws -> [Song] {
-        // First page: serve cached results immediately, refresh in background
         if offset == 0, let cached = try? await getCachedSongs(for: query), !cached.isEmpty {
-            Task { try? await fetchAndCacheSongs(query: query, offset: offset) }
             return cached
         }
         return try await fetchAndCacheSongs(query: query, offset: offset)
@@ -90,7 +88,6 @@ final class SongRepositoryImpl: SongRepositoryProtocol {
         return try context.fetch(descriptor).map { $0.toDomain() }
     }
 
-    @discardableResult
     private func fetchAndCacheSongs(query: String, offset: Int) async throws -> [Song] {
         let endpoint = iTunesAPI.searchSongs(query: query, offset: offset)
         let response: iTunesSearchResponse = try await networkService.request(endpoint)

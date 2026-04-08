@@ -10,7 +10,7 @@ import SwiftData
 
 // MARK: - Recently Played Song (SwiftData Model)
 @Model
-final class RecentlyPlayedSong {
+final class RecentlyPlayedSong: PersistableSong {
     @Attribute(.unique) var trackId: Int
     var trackName: String
     var artistName: String
@@ -31,18 +31,5 @@ final class RecentlyPlayedSong {
         self.previewUrlString = song.previewUrl?.absoluteString
         self.trackNumber = song.trackNumber
         self.playedAt = Date()
-    }
-
-    func toDomain() -> Song {
-        Song(
-            id: trackId,
-            name: trackName,
-            artistName: artistName,
-            collectionId: collectionId,
-            collectionName: collectionName,
-            artworkUrl: artworkUrlString.flatMap { URL(string: $0) },
-            previewUrl: previewUrlString.flatMap { URL(string: $0) },
-            trackNumber: trackNumber
-        )
     }
 }

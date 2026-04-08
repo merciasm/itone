@@ -46,9 +46,7 @@ final class URLSessionNetworkService: NetworkServiceProtocol {
             throw NetworkError.invalidURL
         }
 
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = endpoint.method.rawValue
-        endpoint.headers.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
+        let urlRequest = URLRequest(url: url)
 
         let (data, response): (Data, URLResponse)
         do {
