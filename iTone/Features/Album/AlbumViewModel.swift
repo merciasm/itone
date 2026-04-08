@@ -13,7 +13,6 @@ import Foundation
 final class AlbumViewModel {
     var album: Album?
     var viewState: ViewState = .loading
-    var skipLoad = false
 
     private let collectionId: Int
     private let repository: SongRepositoryProtocol
@@ -24,7 +23,6 @@ final class AlbumViewModel {
     }
 
     func load() async {
-        if skipLoad { return }
         if case .loaded = viewState { return }
         if case .empty = viewState { return }
         viewState = .loading

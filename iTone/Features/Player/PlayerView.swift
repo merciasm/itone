@@ -26,7 +26,7 @@ struct PlayerView: View {
                 networkService: URLSessionNetworkService(),
                 modelContainer: iToneModelContainer.shared
             ),
-            audioPlayer: .shared
+            audioPlayer: AVAudioPlayerService.shared
         ))
     }
 
@@ -100,6 +100,7 @@ struct PlayerView: View {
             size: 264,
             cornerRadius: 16
         )
+        .accessibilityLabel("Album artwork for \(viewModel.currentSong.name)")
         .shadow(color: .black.opacity(0.4), radius: 20, x: 0, y: 10)
     }
 
@@ -144,6 +145,8 @@ struct PlayerView: View {
                 ),
                 in: 0...1
             )
+            .accessibilityLabel("Song progress")
+            .accessibilityValue("\(viewModel.formattedTime(viewModel.currentTime)) of \(viewModel.formattedTime(viewModel.duration))")
             .tint(.primaryText.opacity(0.6))
             .frame(height: 24)
 
@@ -173,6 +176,7 @@ struct PlayerView: View {
                     .foregroundStyle(viewModel.hasPrevious ? .primaryText : .secondaryText)
                     .frame(width: 36, height: 36)
             }
+            .accessibilityLabel("Previous")
             .buttonStyle(.plain)
             .disabled(!viewModel.hasPrevious)
 
@@ -185,6 +189,7 @@ struct PlayerView: View {
                     .frame(width: 72, height: 72)
                     .glassEffect(.regular.interactive(), in: .circle)
             }
+            .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
 
             Button {
                 viewModel.playNext()
@@ -194,6 +199,7 @@ struct PlayerView: View {
                     .foregroundStyle(viewModel.hasNext ? .primaryText : .secondaryText)
                     .frame(width: 36, height: 36)
             }
+            .accessibilityLabel("Next")
             .buttonStyle(.plain)
             .disabled(!viewModel.hasNext)
         }

@@ -9,8 +9,8 @@ import Foundation
 
 // MARK: - iTunes API Endpoint Factory
 enum iTunesAPI {
-    nonisolated(unsafe) private static let baseURL = "https://itunes.apple.com"
-    nonisolated(unsafe) static let pageSize = 25
+    private nonisolated static let baseURL = "https://itunes.apple.com"
+    nonisolated static let pageSize = 25
 
     /// Search songs by text query with pagination support
     nonisolated static func searchSongs(query: String, offset: Int = 0) -> Endpoint {

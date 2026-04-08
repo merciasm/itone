@@ -292,10 +292,10 @@ private struct PreviewSongsRepository: SongRepositoryProtocol {
 
 #Preview {
     let viewModel = {
-        let vm = SongsViewModel(repository: PreviewSongsRepository())
-        vm.recentlyPlayed = PreviewSongsRepository.previewSongs
-        vm.viewState = .idle
-        return vm
+        let songsViewModel = SongsViewModel(repository: PreviewSongsRepository())
+        songsViewModel.recentlyPlayed = PreviewSongsRepository.previewSongs
+        songsViewModel.viewState = .idle
+        return songsViewModel
     }()
 
     NavigationStack {

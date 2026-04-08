@@ -154,14 +154,13 @@ private struct PreviewRepository: SongRepositoryProtocol {
     )
 
     let viewModel = {
-        let vm = AlbumViewModel(
+        let albumViewModel = AlbumViewModel(
             collectionId: album.id,
             repository: PreviewRepository(album: album)
         )
-        vm.album = album
-        vm.viewState = .loaded
-//        vm.skipLoad = true // comment this out to test loading, idle or error state
-        return vm
+        albumViewModel.album = album
+        albumViewModel.viewState = .loaded
+        return albumViewModel
     }()
 
     NavigationStack {

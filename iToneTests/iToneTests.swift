@@ -24,6 +24,42 @@ final class MockNetworkService: NetworkServiceProtocol, @unchecked Sendable {
     }
 }
 
+// MARK: - Mock Audio Player
+
+@MainActor
+final class MockAudioPlayerService: AudioPlayerServiceProtocol {
+    var isPlaying: Bool = false
+    var currentTime: Double = 0
+    var duration: Double = 30
+    var progress: Double = 0
+
+    var playedURLs: [URL] = []
+    var seekedTo: Double?
+
+    func play(url: URL) {
+        playedURLs.append(url)
+        isPlaying = true
+        currentTime = 0
+        progress = 0
+    }
+
+    func pause() { isPlaying = false }
+    func resume() { isPlaying = true }
+
+    func seek(to time: Double) {
+        seekedTo = time
+        currentTime = time
+        progress = duration > 0 ? time / duration : 0
+    }
+
+    func stop() {
+        isPlaying = false
+        currentTime = 0
+        duration = 0
+        progress = 0
+    }
+}
+
 // MARK: - Mock Repository
 
 @MainActor
@@ -162,89 +198,89 @@ struct DTOMappingTests {
 struct SongsViewModelTests {
     @Test("Initial state is idle")
     func initialStateIsIdle() {
-        let repo = MockSongRepository()
-        let vm = SongsViewModel(repository: repo)
-        #expect(vm.viewState == .idle)
-        #expect(vm.songs.isEmpty)
-        #expect(vm.searchText.isEmpty)
+        let repository = MockSongRepository()
+        let viewModel = SongsViewModel(repository: repository)
+        #expect(viewModel.viewState == .idle)
+        #expect(viewModel.songs.isEmpty)
+        #expect(viewModel.searchText.isEmpty)
     }
 
     @Test("Search returns results and sets loaded state")
     func searchReturnsResults() async throws {
-        let repo = MockSongRepository()
-        repo.searchResult = [.fixture(id: 1), .fixture(id: 2)]
-        let vm = SongsViewModel(repository: repo)
+        let repository = MockSongRepository()
+        repository.searchResult = [.fixture(id: 1), .fixture(id: 2)]
+        let viewModel = SongsViewModel(repository: repository)
 
-        vm.searchText = "Daft"
-        vm.onSearchTextChanged()
+        viewModel.searchText = "Daft"
+        viewModel.onSearchTextChanged()
 
         // Wait for debounce + fetch
         try await Task.sleep(for: .milliseconds(600))
-        #expect(vm.songs.count == 2)
-        #expect(vm.viewState == .loaded)
+        #expect(viewModel.songs.count == 2)
+        #expect(viewModel.viewState == .loaded)
     }
 
     @Test("Empty search text resets to idle state")
     func emptySearchResetsState() async throws {
-        let repo = MockSongRepository()
-        repo.searchResult = [.fixture()]
-        let vm = SongsViewModel(repository: repo)
+        let repository = MockSongRepository()
+        repository.searchResult = [.fixture()]
+        let viewModel = SongsViewModel(repository: repository)
 
-        vm.searchText = "test"
-        vm.onSearchTextChanged()
+        viewModel.searchText = "test"
+        viewModel.onSearchTextChanged()
         try await Task.sleep(for: .milliseconds(600))
 
-        vm.searchText = ""
-        vm.onSearchTextChanged()
+        viewModel.searchText = ""
+        viewModel.onSearchTextChanged()
         try await Task.sleep(for: .milliseconds(100))
 
-        #expect(vm.viewState == .idle)
-        #expect(vm.songs.isEmpty)
+        #expect(viewModel.viewState == .idle)
+        #expect(viewModel.songs.isEmpty)
     }
 
     @Test("Network error sets error state when no songs cached")
     func networkErrorSetsErrorState() async throws {
-        let repo = MockSongRepository()
-        repo.shouldThrow = NetworkError.noConnection
-        let vm = SongsViewModel(repository: repo)
+        let repository = MockSongRepository()
+        repository.shouldThrow = NetworkError.noConnection
+        let viewModel = SongsViewModel(repository: repository)
 
-        vm.searchText = "test"
-        vm.onSearchTextChanged()
+        viewModel.searchText = "test"
+        viewModel.onSearchTextChanged()
         try await Task.sleep(for: .milliseconds(600))
 
-        if case .error = vm.viewState {
+        if case .error = viewModel.viewState {
             // Expected
         } else {
-            Issue.record("Expected error state, got \(vm.viewState)")
+            Issue.record("Expected error state, got \(viewModel.viewState)")
         }
     }
 
     @Test("loadMore appends songs to existing list")
     func loadMoreAppendsSongs() async throws {
-        let repo = MockSongRepository()
-        repo.searchResult = Array((1...25).map { Song.fixture(id: $0) })
-        let vm = SongsViewModel(repository: repo)
+        let repository = MockSongRepository()
+        repository.searchResult = Array((1...25).map { Song.fixture(id: $0) })
+        let viewModel = SongsViewModel(repository: repository)
 
-        vm.searchText = "test"
-        vm.onSearchTextChanged()
+        viewModel.searchText = "test"
+        viewModel.onSearchTextChanged()
         try await Task.sleep(for: .milliseconds(600))
-        #expect(vm.songs.count == 25)
+        #expect(viewModel.songs.count == 25)
 
         // Second page
-        repo.searchResult = Array((26...50).map { Song.fixture(id: $0) })
-        vm.loadMore()
+        repository.searchResult = Array((26...50).map { Song.fixture(id: $0) })
+        viewModel.loadMore()
         try await Task.sleep(for: .milliseconds(200))
-        #expect(vm.songs.count == 50)
+        #expect(viewModel.songs.count == 50)
     }
 
     @Test("Recently played songs are loaded on appear")
     func recentlyPlayedLoaded() async throws {
-        let repo = MockSongRepository()
-        repo.recentlyPlayed = [.fixture(id: 10), .fixture(id: 11)]
-        let vm = SongsViewModel(repository: repo)
+        let repository = MockSongRepository()
+        repository.recentlyPlayed = [.fixture(id: 10), .fixture(id: 11)]
+        let viewModel = SongsViewModel(repository: repository)
 
-        await vm.loadRecentlyPlayed()
-        #expect(vm.recentlyPlayed.count == 2)
+        await viewModel.loadRecentlyPlayed()
+        #expect(viewModel.recentlyPlayed.count == 2)
     }
 }
 
@@ -255,24 +291,24 @@ struct SongsViewModelTests {
 struct AlbumViewModelTests {
     @Test("Loads album successfully")
     func loadsAlbum() async {
-        let repo = MockSongRepository()
+        let repository = MockSongRepository()
         let songs = [Song.fixture(id: 1), Song.fixture(id: 2)]
-        repo.albumResult = Album(
+        repository.albumResult = Album(
             id: 100, name: "Test Album", artistName: "Test Artist",
             artworkUrl: nil, songs: songs)
-        let vm = AlbumViewModel(collectionId: 100, repository: repo)
-        await vm.load()
-        #expect(vm.viewState == .loaded)
-        #expect(vm.album?.songs.count == 2)
+        let viewModel = AlbumViewModel(collectionId: 100, repository: repository)
+        await viewModel.load()
+        #expect(viewModel.viewState == .loaded)
+        #expect(viewModel.album?.songs.count == 2)
     }
 
     @Test("Error state on network failure")
     func errorStateOnFailure() async {
-        let repo = MockSongRepository()
-        repo.shouldThrow = NetworkError.noConnection
-        let vm = AlbumViewModel(collectionId: 100, repository: repo)
-        await vm.load()
-        if case .error = vm.viewState {
+        let repository = MockSongRepository()
+        repository.shouldThrow = NetworkError.noConnection
+        let viewModel = AlbumViewModel(collectionId: 100, repository: repository)
+        await viewModel.load()
+        if case .error = viewModel.viewState {
             // Expected
         } else {
             Issue.record("Expected error state")
@@ -300,11 +336,144 @@ struct SongModelTests {
 
     @Test("Song conforms to Hashable using id")
     func songHashable() {
-        let s1 = Song.fixture(id: 1)
-        let s2 = Song.fixture(id: 1)
-        let s3 = Song.fixture(id: 2)
-        #expect(s1 == s2)
-        #expect(s1 != s3)
+        let songA = Song.fixture(id: 1)
+        let songB = Song.fixture(id: 1)
+        let differentSong = Song.fixture(id: 2)
+        #expect(songA == songB)
+        #expect(songA != differentSong)
     }
 }
+
+// MARK: - PlayerViewModel Tests
+@Suite("PlayerViewModel Tests")
+@MainActor
+struct PlayerViewModelTests {
+    private func makePlayerViewModel(
+        song: Song = .fixture(id: 1),
+        playlist: [Song]? = nil,
+        audioPlayer: MockAudioPlayerService = MockAudioPlayerService(),
+        repository: MockSongRepository = MockSongRepository()
+    ) -> (PlayerViewModel, MockAudioPlayerService) {
+        let list = playlist ?? [song]
+        let viewModel = PlayerViewModel(
+            song: song,
+            playlist: list,
+            repository: repository,
+            audioPlayer: audioPlayer
+        )
+        return (viewModel, audioPlayer)
+    }
+
+    @Test("Play starts playback")
+    func playStartsPlayback() {
+        let repository = MockSongRepository()
+        let (viewModel, player) = makePlayerViewModel(repository: repository)
+        viewModel.play()
+        #expect(player.isPlaying)
+        #expect(player.playedURLs.count == 1)
+    }
+
+    @Test("Toggle play/pause pauses when playing")
+    func togglePause() {
+        let (viewModel, player) = makePlayerViewModel()
+        viewModel.play()
+        #expect(player.isPlaying)
+        viewModel.togglePlayPause()
+        #expect(!player.isPlaying)
+    }
+
+    @Test("Toggle play/pause resumes when paused mid-song")
+    func toggleResume() {
+        let (viewModel, player) = makePlayerViewModel()
+        viewModel.play()
+        viewModel.togglePlayPause() // pause
+        player.currentTime = 5
+        viewModel.togglePlayPause() // resume
+        #expect(player.isPlaying)
+    }
+
+    @Test("Seek updates progress")
+    func seekUpdatesProgress() {
+        let (viewModel, player) = makePlayerViewModel()
+        player.duration = 30
+        viewModel.seek(to: 0.5)
+        #expect(player.seekedTo == 15)
+    }
+
+    @Test("playNext advances to next song")
+    func playNextAdvances() {
+        let songs = [Song.fixture(id: 1), Song.fixture(id: 2), Song.fixture(id: 3)]
+        let (viewModel, player) = makePlayerViewModel(song: songs[0], playlist: songs)
+        viewModel.play()
+        #expect(viewModel.hasNext)
+
+        viewModel.playNext()
+        #expect(viewModel.currentSong.id == 2)
+        #expect(player.playedURLs.count == 2)
+    }
+
+    @Test("playNext does nothing at end of playlist")
+    func playNextAtEnd() {
+        let songs = [Song.fixture(id: 1)]
+        let (viewModel, _) = makePlayerViewModel(song: songs[0], playlist: songs)
+        #expect(!viewModel.hasNext)
+        viewModel.playNext()
+        #expect(viewModel.currentSong.id == 1)
+    }
+
+    @Test("playPrevious goes to previous song when near start")
+    func playPreviousGoesBack() {
+        let songs = [Song.fixture(id: 1), Song.fixture(id: 2)]
+        let (viewModel, player) = makePlayerViewModel(song: songs[1], playlist: songs)
+        player.currentTime = 1 // < 3 seconds
+        viewModel.playPrevious()
+        #expect(viewModel.currentSong.id == 1)
+    }
+
+    @Test("playPrevious restarts song when past 3 seconds")
+    func playPreviousRestarts() {
+        let songs = [Song.fixture(id: 1), Song.fixture(id: 2)]
+        let (viewModel, player) = makePlayerViewModel(song: songs[1], playlist: songs)
+        player.currentTime = 5 // > 3 seconds
+        viewModel.playPrevious()
+        #expect(viewModel.currentSong.id == 2) // stays on same song
+        #expect(player.seekedTo == 0)   // but restarted
+    }
+
+    @Test("stopPlayback stops the player")
+    func stopPlayback() {
+        let (viewModel, player) = makePlayerViewModel()
+        viewModel.play()
+        viewModel.stopPlayback()
+        #expect(!player.isPlaying)
+    }
+
+    @Test("formattedTime formats correctly")
+    func formattedTime() {
+        let (viewModel, _) = makePlayerViewModel()
+        #expect(viewModel.formattedTime(0) == "0:00")
+        #expect(viewModel.formattedTime(65) == "1:05")
+        #expect(viewModel.formattedTime(125) == "2:05")
+        #expect(viewModel.formattedTime(.nan) == "0:00")
+        #expect(viewModel.formattedTime(-5) == "0:00")
+    }
+
+    @Test("Toggle play/pause from cold state triggers play")
+    func togglePlayPauseFromColdState() {
+        let (viewModel, player) = makePlayerViewModel()
+        // Not playing, currentTime == 0 → should call play()
+        viewModel.togglePlayPause()
+        #expect(player.isPlaying)
+        #expect(player.playedURLs.count == 1)
+    }
+
+    @Test("hasPrevious and hasNext are correct")
+    func navigationFlags() {
+        let songs = [Song.fixture(id: 1), Song.fixture(id: 2), Song.fixture(id: 3)]
+        let (viewModel, _) = makePlayerViewModel(song: songs[1], playlist: songs)
+        #expect(viewModel.hasPrevious)
+        #expect(viewModel.hasNext)
+    }
+}
+
 

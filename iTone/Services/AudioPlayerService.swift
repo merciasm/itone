@@ -112,11 +112,13 @@ final class AVAudioPlayerService: AudioPlayerServiceProtocol {
     private func addPeriodicObserver() {
         let interval = CMTime(seconds: 0.5, preferredTimescale: 600)
         timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            guard let self else { return }
             let seconds = time.seconds
             guard !seconds.isNaN else { return }
-            self.currentTime = seconds
-            self.progress = self.duration > 0 ? seconds / self.duration : 0
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.currentTime = seconds
+                self.progress = self.duration > 0 ? seconds / self.duration : 0
+            }
         }
     }
 

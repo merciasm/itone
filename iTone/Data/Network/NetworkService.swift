@@ -36,11 +36,9 @@ protocol NetworkServiceProtocol: Sendable {
 // MARK: - URLSession Implementation
 final class URLSessionNetworkService: NetworkServiceProtocol {
     private let session: URLSession
-    private let decoder: JSONDecoder
 
     init(session: URLSession = .shared) {
         self.session = session
-        self.decoder = JSONDecoder()
     }
 
     func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
@@ -70,7 +68,7 @@ final class URLSessionNetworkService: NetworkServiceProtocol {
         }
 
         do {
-            return try decoder.decode(T.self, from: data)
+            return try JSONDecoder().decode(T.self, from: data)
         } catch {
             throw NetworkError.decodingError(error)
         }

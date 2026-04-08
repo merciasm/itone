@@ -33,7 +33,7 @@ struct SongRowView: View {
             if let onMoreOptions {
                 Button(action: onMoreOptions) {
                     Image(systemName: "ellipsis")
-                        .foregroundStyle(Color(red: 0.33, green: 0.33, blue: 0.33))
+                        .foregroundStyle(.secondaryText)
                         .frame(width: 32, height: 32)
                         .contentShape(Rectangle())
                 }

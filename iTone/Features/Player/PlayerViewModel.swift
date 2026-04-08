@@ -14,7 +14,7 @@ final class PlayerViewModel {
     var currentSong: Song
     var playlist: [Song]
 
-    private let audioPlayer: AVAudioPlayerService
+    private let audioPlayer: AudioPlayerServiceProtocol
     private let repository: SongRepositoryProtocol
 
     var isRepeating: Bool = false
@@ -36,7 +36,7 @@ final class PlayerViewModel {
         playlist.firstIndex(of: currentSong) ?? 0
     }
 
-    init(song: Song, playlist: [Song], repository: SongRepositoryProtocol, audioPlayer: AVAudioPlayerService) {
+    init(song: Song, playlist: [Song], repository: SongRepositoryProtocol, audioPlayer: AudioPlayerServiceProtocol) {
         self.currentSong = song
         self.playlist = playlist
         self.repository = repository
