@@ -73,7 +73,6 @@ struct SongsView: View {
 
     // MARK: - Search Bar
 
-
     // From the design, I got that the idea was to have the search bar hidden
     // then show it when tapping the search icon
     // It was hard to achieve a great result with this requirement using the native search bar
