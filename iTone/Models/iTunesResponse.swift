@@ -13,9 +13,16 @@ struct iTunesSearchResponse: Decodable, Sendable {
     let results: [iTunesTrackDTO]
 }
 
+// MARK: - Wrapper Type
+enum WrapperType: String, Decodable, Sendable {
+    case track
+    case collection
+}
+
 // MARK: - Track DTO
+// Model that mirrors the iTunes API response for a track, used for decoding JSON and mapping to the domain model.
 struct iTunesTrackDTO: Decodable, Sendable {
-    let wrapperType: String?
+    let wrapperType: WrapperType?
     let kind: String?
     let trackId: Int?
     let trackName: String?

@@ -17,6 +17,7 @@ enum AppRoute: Hashable {
 @MainActor
 @Observable
 final class AppCoordinator {
+    // array of routes
     var path: NavigationPath = NavigationPath()
 
     func navigateToPlayer(song: Song, playlist: [Song]) {

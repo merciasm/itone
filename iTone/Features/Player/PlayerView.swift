@@ -22,10 +22,7 @@ struct PlayerView: View {
         self._viewModel = State(initialValue: PlayerViewModel(
             song: song,
             playlist: playlist,
-            repository: SongRepositoryImpl(
-                networkService: URLSessionNetworkService(),
-                modelContainer: iToneModelContainer.shared
-            ),
+            repository: SongRepository.shared,
             audioPlayer: AVAudioPlayerService.shared
         ))
     }
@@ -80,7 +77,6 @@ struct PlayerView: View {
                 }
             }
         }
-        .toolbarBackground(Color.appBackground, for: .navigationBar)
         .onAppear { viewModel.play() }
         .sheet(isPresented: $showingMoreOptions) {
             MoreOptionsSheet(song: viewModel.currentSong) {
@@ -138,6 +134,7 @@ struct PlayerView: View {
 
     private var timelineSection: some View {
         VStack(spacing: 4) {
+            // Using native slider
             Slider(
                 value: Binding(
                     get: { viewModel.progress },

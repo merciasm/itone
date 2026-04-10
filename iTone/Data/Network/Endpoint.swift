@@ -7,8 +7,9 @@
 
 import Foundation
 
-// MARK: - Endpoint
 struct Endpoint: Sendable {
+    // Swift 6 -> Default Actor isolation -> Main actor
+    // nonisolated: this is fine to call from anywhere, don't force it to the main thread
     nonisolated let baseURL: String
     nonisolated let path: String
     nonisolated let queryItems: [URLQueryItem]

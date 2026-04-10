@@ -28,7 +28,7 @@ The only third-party dependency is SwiftLint (build tool plugin) for code style 
 - Audio preview playback with play/pause, next, previous, seek, and progress tracking
 - Album detail view with track listing, navigable from search results or the player
 - Recently played songs persisted locally with SwiftData
-- Offline-first search — cached results are served instantly, network fetches update the cache
+- Recently played songs displayed on the home screen for quick access
 - Dark theme with a custom color and font system
 - Accessibility labels on the player screen
 - Coordinator-based navigation using `NavigationStack` and `NavigationPath`
@@ -53,7 +53,7 @@ The only third-party dependency is SwiftLint (build tool plugin) for code style 
 iTone/
 ├── Data/
 │   ├── Network/          # Endpoint, iTunesAPI, NetworkService
-│   ├── Persistence/      # SwiftData models (CachedSong, RecentlyPlayedSong)
+│   ├── Persistence/      # SwiftData models (RecentlyPlayedSong)
 │   └── Repositories/     # SongRepository protocol + implementation
 ├── Extensions/           # Color and Font theme extensions
 ├── Features/

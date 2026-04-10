@@ -35,6 +35,7 @@ protocol NetworkServiceProtocol: Sendable {
 
 // MARK: - URLSession Implementation
 final class URLSessionNetworkService: NetworkServiceProtocol {
+    // Using Apple's built-in HTTP client to avoid adding a lib to a simple project
     private let session: URLSession
 
     init(session: URLSession = .shared) {
@@ -61,6 +62,7 @@ final class URLSessionNetworkService: NetworkServiceProtocol {
             throw NetworkError.invalidResponse
         }
 
+//        2xx — Success and 3xx — Redirection
         guard (200..<300).contains(httpResponse.statusCode) else {
             throw NetworkError.httpError(statusCode: httpResponse.statusCode)
         }

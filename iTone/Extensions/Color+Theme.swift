@@ -15,13 +15,10 @@ extension Color {
     // MARK: - Text
     static let primaryText = Color.white
     static let secondaryText = Color(red: 0.45, green: 0.45, blue: 0.45)
-
 }
 
-// MARK: - ShapeStyle shorthand so .primaryText / .accentOrange etc. work in foregroundStyle
+// MARK: - ShapeStyle shorthand so .primaryText etc. work in foregroundStyle
 extension ShapeStyle where Self == Color {
-    static var appBackground: Color { .appBackground }
-    static var surfaceBackground: Color { .surfaceBackground }
     static var primaryText: Color { .primaryText }
     static var secondaryText: Color { .secondaryText }
 }

@@ -54,6 +54,7 @@ final class SongsViewModel {
             return
         }
 
+        // Only start searching after the user stops typing for 400ms, to reduce API calls
         searchTask = Task {
             try? await Task.sleep(for: .milliseconds(400))
             guard !Task.isCancelled else { return }

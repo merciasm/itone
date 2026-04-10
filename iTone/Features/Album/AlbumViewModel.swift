@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Album ViewModel
 @MainActor
-@Observable
+@Observable // Replaces @Published on ios 17
 final class AlbumViewModel {
     var album: Album?
     var viewState: ViewState = .loading
@@ -23,8 +23,11 @@ final class AlbumViewModel {
     }
 
     func load() async {
-        if case .loaded = viewState { return }
-        if case .empty = viewState { return }
+        switch viewState {
+        case .loaded, .empty: return
+        default: break
+        }
+
         viewState = .loading
         do {
             album = try await repository.getAlbumSongs(collectionId: collectionId)

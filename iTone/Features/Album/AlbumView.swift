@@ -19,24 +19,12 @@ struct AlbumView: View {
         self.albumTitle = albumTitle
         self._viewModel = State(initialValue: AlbumViewModel(
             collectionId: collectionId,
-            repository: SongRepositoryImpl(
-                networkService: URLSessionNetworkService(),
-                modelContainer: iToneModelContainer.shared
-            )
+            repository: SongRepository.shared
         ))
-    }
-
-    /// Preview-only init that injects a pre-loaded view model.
-    fileprivate init(previewViewModel: AlbumViewModel, albumTitle: String) {
-        self.collectionId = previewViewModel.album?.id ?? 0
-        self.albumTitle = albumTitle
-        self._viewModel = State(initialValue: previewViewModel)
     }
 
     var body: some View {
         ZStack {
-            Color.appBackground.ignoresSafeArea()
-
             switch viewModel.viewState {
             case .loading:
                 ProgressView()
@@ -62,10 +50,7 @@ struct AlbumView: View {
                 EmptyView()
             }
         }
-        .navigationTitle(albumTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Color.appBackground, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
         .task { await viewModel.load() }
     }
 
@@ -75,7 +60,7 @@ struct AlbumView: View {
         List {
             // Album header
             Section {
-                VStack(spacing: 16) {
+                VStack(alignment: .center, spacing: 16) {
                     ArtworkImageView(
                         url: album.artworkUrl?.resizedArtwork(),
                         size: 120,
@@ -83,7 +68,7 @@ struct AlbumView: View {
                     )
                     .opacity(0.9)
 
-                    VStack(spacing: 6) {
+                    VStack(spacing: 8) {
                         Text(album.name)
                             .font(.albumTitle)
                             .foregroundStyle(.primaryText)
@@ -94,7 +79,9 @@ struct AlbumView: View {
                     }
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .listRowInsets(EdgeInsets())
+                .listSectionSpacing(0)
+                .padding(.bottom, 48)
             }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
@@ -111,59 +98,15 @@ struct AlbumView: View {
                         }
                 }
             }
+            .background(Color.clear)
+            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
+            .listSectionSpacing(20)
+
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Color.appBackground)
-    }
-}
-
-// MARK: - Preview
-
-private struct PreviewRepository: SongRepositoryProtocol {
-    let album: Album
-
-    func searchSongs(query: String) async throws -> [Song] { [] }
-    func getAlbumSongs(collectionId: Int) async throws -> Album { album }
-    func markAsPlayed(_ song: Song) async throws {}
-    func getRecentlyPlayed(limit: Int) async throws -> [Song] { [] }
-}
-
-#Preview {
-    let songs: [Song] = (1...4).map { index in
-        Song(
-            id: index,
-            name: ["Testing", "Another music", "This is a test", "A new song"][index - 1],
-            artistName: "Test Artist",
-            collectionId: 1499209861,
-            collectionName: "Test Album",
-            artworkUrl: URL(string: ""),
-            previewUrl: nil,
-            trackNumber: index
-        )
-    }
-    let album = Album(
-        id: 1499209861,
-        name: "Test Album",
-        artistName: "Test Artist",
-        artworkUrl: URL(string: ""),
-        songs: songs
-    )
-
-    let viewModel = {
-        let albumViewModel = AlbumViewModel(
-            collectionId: album.id,
-            repository: PreviewRepository(album: album)
-        )
-        albumViewModel.album = album
-        albumViewModel.viewState = .loaded
-        return albumViewModel
-    }()
-
-    NavigationStack {
-        AlbumView(previewViewModel: viewModel, albumTitle: album.name)
-            .environment(AppCoordinator())
     }
 }

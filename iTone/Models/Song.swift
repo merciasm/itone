@@ -18,6 +18,7 @@ extension URL {
     }
 }
 
+// Only got the information I needed from design and requirements
 // MARK: - Song Domain Model
 struct Song: Identifiable, Hashable, Sendable {
     let id: Int

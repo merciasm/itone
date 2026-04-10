@@ -16,16 +16,8 @@ struct SongsView: View {
 
     init() {
         self._viewModel = State(initialValue: SongsViewModel(
-            repository: SongRepositoryImpl(
-                networkService: URLSessionNetworkService(),
-                modelContainer: iToneModelContainer.shared
-            )
+            repository: SongRepository.shared
         ))
-    }
-
-    /// Preview-only init that injects a pre-loaded view model.
-    fileprivate init(viewModel: SongsViewModel) {
-        self._viewModel = State(initialValue: viewModel)
     }
 
     @FocusState private var isSearchFieldFocused: Bool
@@ -81,6 +73,11 @@ struct SongsView: View {
 
     // MARK: - Search Bar
 
+
+    // From the design, I got that the idea was to have the search bar hidden
+    // then show it when tapping the search icon
+    // It was hard to achieve a great result with this requirement using the native search bar
+    // that's why we have a custom one that slides from the top when activating the search mode
     private var searchBar: some View {
         HStack(spacing: 8) {
             HStack(spacing: 6) {
@@ -172,8 +169,6 @@ struct SongsView: View {
                 SongRowView(song: song, imageSize: 52) {
                     songForOptions = song
                 }
-                .listRowBackground(Color.appBackground)
-                .listRowSeparatorTint(.surfaceBackground)
                 .onTapGesture {
                     coordinator.navigateToPlayer(
                         song: song,
@@ -182,7 +177,10 @@ struct SongsView: View {
                 }
             }
         }
+        .listRowInsets(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 16))
+        .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
+        .listSectionSpacing(20)
     }
 
     // MARK: - Search Results Section
@@ -193,7 +191,6 @@ struct SongsView: View {
                 SongRowView(song: song, imageSize: 52) {
                     songForOptions = song
                 }
-                .listRowBackground(Color.clear)
                 .onTapGesture {
                     coordinator.navigateToPlayer(
                         song: song,
@@ -217,7 +214,10 @@ struct SongsView: View {
                 }
             }
         }
+        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+        .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
+        .listSectionSpacing(20)
     }
 
     // MARK: - States
@@ -261,43 +261,5 @@ struct SongsView: View {
             .buttonStyle(.bordered)
             .tint(.secondaryText)
         }
-    }
-}
-
-// MARK: - Preview
-
-private struct PreviewSongsRepository: SongRepositoryProtocol {
-    func searchSongs(query: String) async throws -> [Song] { [] }
-    func getAlbumSongs(collectionId: Int) async throws -> Album {
-        Album(id: 0, name: "", artistName: "", artworkUrl: nil, songs: [])
-    }
-    func markAsPlayed(_ song: Song) async throws {}
-    func getRecentlyPlayed(limit: Int) async throws -> [Song] { Self.previewSongs }
-
-    static let previewSongs: [Song] = (1...2).map { index in
-        Song(
-            id: index,
-            name: ["Test Song", "Test Song 2"][index - 1],
-            artistName: "Test Artist",
-            collectionId: 1499209861,
-            collectionName: "Test Album",
-            artworkUrl: URL(string: ""),
-            previewUrl: nil,
-            trackNumber: index
-        )
-    }
-}
-
-#Preview {
-    let viewModel = {
-        let songsViewModel = SongsViewModel(repository: PreviewSongsRepository())
-        songsViewModel.recentlyPlayed = PreviewSongsRepository.previewSongs
-        songsViewModel.viewState = .idle
-        return songsViewModel
-    }()
-
-    NavigationStack {
-        SongsView(viewModel: viewModel)
-            .environment(AppCoordinator())
     }
 }

@@ -109,6 +109,7 @@ final class AVAudioPlayerService: AudioPlayerServiceProtocol {
 
     // MARK: - Private
 
+    // It sets up a timer that fires every 0.5 seconds while audio is playing, to update the playback progress.
     private func addPeriodicObserver() {
         let interval = CMTime(seconds: 0.5, preferredTimescale: 600)
         timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in

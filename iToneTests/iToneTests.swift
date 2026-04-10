@@ -142,7 +142,7 @@ struct DTOMappingTests {
     @Test("Valid DTO maps to Song correctly")
     func validDTOMapsToSong() {
         let dto = iTunesTrackDTO(
-            wrapperType: "track",
+            wrapperType: .track,
             kind: "song",
             trackId: 42,
             trackName: "Get Lucky",
@@ -166,7 +166,7 @@ struct DTOMappingTests {
     @Test("DTO with missing required fields returns nil")
     func incompleteDTOReturnsNil() {
         let dto = iTunesTrackDTO(
-            wrapperType: "track",
+            wrapperType: .track,
             kind: "song",
             trackId: nil,
             trackName: nil,

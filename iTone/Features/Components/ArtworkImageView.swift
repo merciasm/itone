@@ -15,6 +15,8 @@ struct ArtworkImageView: View {
 
     var body: some View {
         if let url {
+            // Usually, on the projects we use kingsfisher to handle image loading and caching,
+            // but since this is a small project, I decided to go with the native AsyncImage
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .success(let image):
@@ -28,6 +30,8 @@ struct ArtworkImageView: View {
                         ProgressView()
                             .tint(.secondaryText)
                     }
+                    // if Apple adds a new phase in a future iOS version that I haven't handled
+                    // fall back to this case instead of crashing.
                 @unknown default:
                     placeholder
                 }
