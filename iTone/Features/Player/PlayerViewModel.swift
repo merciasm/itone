@@ -49,9 +49,9 @@ final class PlayerViewModel {
     // MARK: - Playback
 
     func play() {
+        Task { try? await repository.markAsPlayed(currentSong) }
         guard let url = currentSong.previewUrl else { return }
         audioPlayer.play(url: url)
-        Task { try? await repository.markAsPlayed(currentSong) }
     }
 
     func togglePlayPause() {

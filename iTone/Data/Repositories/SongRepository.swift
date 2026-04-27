@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import WidgetKit
 
 protocol SongRepositoryProtocol: Sendable {
     func searchSongs(query: String) async throws -> [Song]
@@ -74,6 +75,10 @@ final class SongRepository: SongRepositoryProtocol {
         let record = RecentlyPlayedSong(from: song)
         context.insert(record)
         try context.save()
+        let groupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: iToneModelContainer.appGroupID)
+        print("[App] markAsPlayed '\(song.name)' — App Group URL: \(groupURL?.path ?? "nil (using default store)")")
+        // Tell the widget to refresh so it reflects the newly played song
+        WidgetCenter.shared.reloadTimelines(ofKind: "RecentlyPlayedWidget")
     }
 
     func getRecentlyPlayed(limit: Int) async throws -> [Song] {

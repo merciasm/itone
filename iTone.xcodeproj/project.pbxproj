@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		49E81C932F9BA67100F57140 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E81C922F9BA67100F57140 /* WidgetKit.framework */; };
+		49E81C952F9BA67100F57140 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49E81C942F9BA67100F57140 /* SwiftUI.framework */; };
+		49E81CA62F9BA67100F57140 /* iToneWIdgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 49E81C902F9BA67100F57140 /* iToneWIdgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4928614E2F84BA8C009E5E3E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,7 +27,28 @@
 			remoteGlobalIDString = 4928613D2F84BA8B009E5E3E;
 			remoteInfo = iTone;
 		};
+		49E81CA42F9BA67100F57140 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 492861362F84BA8B009E5E3E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49E81C8F2F9BA67100F57140;
+			remoteInfo = iToneWIdgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		49E81CA72F9BA67100F57140 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				49E81CA62F9BA67100F57140 /* iToneWIdgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4928613E2F84BA8B009E5E3E /* iTone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTone.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,11 +59,36 @@
 		492862932F84CBD7009E5E3E /* iTone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = iTone.xcodeproj; sourceTree = "<group>"; };
 		492863912F84CF1E009E5E3E /* iTone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = iTone.xcodeproj; sourceTree = "<group>"; };
 		49E81B752F85672100F57140 /* iTone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = iTone.xcodeproj; sourceTree = "<group>"; };
+		49E81C6A2F9BA3BF00F57140 /* iTone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = iTone.xcodeproj; sourceTree = "<group>"; };
+		49E81C902F9BA67100F57140 /* iToneWIdgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iToneWIdgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		49E81C922F9BA67100F57140 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		49E81C942F9BA67100F57140 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		49E81CBD2F9BB05600F57140 /* iToneWIdgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iToneWIdgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		49E81CAA2F9BA67100F57140 /* Exceptions for "iToneWIdget" folder in "iToneWIdgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 49E81C8F2F9BA67100F57140 /* iToneWIdgetExtension */;
+		};
+		49E81CBF2F9BB1AB00F57140 /* Exceptions for "iTone" folder in "iTone" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4928613D2F84BA8B009E5E3E /* iTone */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		492861402F84BA8B009E5E3E /* iTone */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				49E81CBF2F9BB1AB00F57140 /* Exceptions for "iTone" folder in "iTone" target */,
+			);
 			path = iTone;
 			sourceTree = "<group>";
 		};
@@ -48,6 +100,14 @@
 		4928615A2F84BA8C009E5E3E /* iToneUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = iToneUITests;
+			sourceTree = "<group>";
+		};
+		49E81C962F9BA67100F57140 /* iToneWIdget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				49E81CAA2F9BA67100F57140 /* Exceptions for "iToneWIdget" folder in "iToneWIdgetExtension" target */,
+			);
+			path = iToneWIdget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,15 +134,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		49E81C8D2F9BA67100F57140 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49E81C952F9BA67100F57140 /* SwiftUI.framework in Frameworks */,
+				49E81C932F9BA67100F57140 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		492861352F84BA8B009E5E3E = {
 			isa = PBXGroup;
 			children = (
+				49E81CBD2F9BB05600F57140 /* iToneWIdgetExtension.entitlements */,
 				492861402F84BA8B009E5E3E /* iTone */,
 				492861502F84BA8C009E5E3E /* iToneTests */,
 				4928615A2F84BA8C009E5E3E /* iToneUITests */,
+				49E81C962F9BA67100F57140 /* iToneWIdget */,
+				49E81C912F9BA67100F57140 /* Frameworks */,
 				4928613F2F84BA8B009E5E3E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,6 +165,7 @@
 				4928613E2F84BA8B009E5E3E /* iTone.app */,
 				4928614D2F84BA8C009E5E3E /* iToneTests.xctest */,
 				492861572F84BA8C009E5E3E /* iToneUITests.xctest */,
+				49E81C902F9BA67100F57140 /* iToneWIdgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,6 +205,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		49E81C6C2F9BA3BF00F57140 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		49E81C912F9BA67100F57140 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				49E81C922F9BA67100F57140 /* WidgetKit.framework */,
+				49E81C942F9BA67100F57140 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,11 +229,13 @@
 				4928613A2F84BA8B009E5E3E /* Sources */,
 				4928613B2F84BA8B009E5E3E /* Frameworks */,
 				4928613C2F84BA8B009E5E3E /* Resources */,
+				49E81CA72F9BA67100F57140 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				87B369CF2F8709F9003C94DC /* PBXTargetDependency */,
+				49E81CA52F9BA67100F57140 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				492861402F84BA8B009E5E3E /* iTone */,
@@ -204,6 +293,28 @@
 			productReference = 492861572F84BA8C009E5E3E /* iToneUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		49E81C8F2F9BA67100F57140 /* iToneWIdgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49E81CAB2F9BA67100F57140 /* Build configuration list for PBXNativeTarget "iToneWIdgetExtension" */;
+			buildPhases = (
+				49E81C8C2F9BA67100F57140 /* Sources */,
+				49E81C8D2F9BA67100F57140 /* Frameworks */,
+				49E81C8E2F9BA67100F57140 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				49E81C962F9BA67100F57140 /* iToneWIdget */,
+			);
+			name = iToneWIdgetExtension;
+			packageProductDependencies = (
+			);
+			productName = iToneWIdgetExtension;
+			productReference = 49E81C902F9BA67100F57140 /* iToneWIdgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -224,6 +335,9 @@
 					492861562F84BA8C009E5E3E = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 4928613D2F84BA8B009E5E3E;
+					};
+					49E81C8F2F9BA67100F57140 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -252,6 +366,10 @@
 					ProjectRef = 4928616D2F84BAD0009E5E3E /* iTone.xcodeproj */;
 				},
 				{
+					ProductGroup = 49E81C6C2F9BA3BF00F57140 /* Products */;
+					ProjectRef = 49E81C6A2F9BA3BF00F57140 /* iTone.xcodeproj */;
+				},
+				{
 					ProductGroup = 492863932F84CF1E009E5E3E /* Products */;
 					ProjectRef = 492863912F84CF1E009E5E3E /* iTone.xcodeproj */;
 				},
@@ -269,6 +387,7 @@
 				4928613D2F84BA8B009E5E3E /* iTone */,
 				4928614C2F84BA8C009E5E3E /* iToneTests */,
 				492861562F84BA8C009E5E3E /* iToneUITests */,
+				49E81C8F2F9BA67100F57140 /* iToneWIdgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -289,6 +408,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		492861552F84BA8C009E5E3E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49E81C8E2F9BA67100F57140 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -319,6 +445,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		49E81C8C2F9BA67100F57140 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -331,6 +464,11 @@
 			isa = PBXTargetDependency;
 			target = 4928613D2F84BA8B009E5E3E /* iTone */;
 			targetProxy = 492861582F84BA8C009E5E3E /* PBXContainerItemProxy */;
+		};
+		49E81CA52F9BA67100F57140 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49E81C8F2F9BA67100F57140 /* iToneWIdgetExtension */;
+			targetProxy = 49E81CA42F9BA67100F57140 /* PBXContainerItemProxy */;
 		};
 		87B369CF2F8709F9003C94DC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -465,6 +603,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = iTone/iTone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -474,7 +613,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = iTone/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = iTone;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -512,6 +651,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = iTone/iTone.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -521,7 +661,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = iTone/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = iTone;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -655,6 +795,73 @@
 			};
 			name = Release;
 		};
+		49E81CA82F9BA67100F57140 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = iToneWIdgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U49U8LW3UT;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iToneWIdget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = iToneWIdget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iTone.iToneWIdget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		49E81CA92F9BA67100F57140 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = iToneWIdgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U49U8LW3UT;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iToneWIdget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = iToneWIdget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.iTone.iToneWIdget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -690,6 +897,15 @@
 			buildConfigurations = (
 				492861682F84BA8C009E5E3E /* Debug */,
 				492861692F84BA8C009E5E3E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49E81CAB2F9BA67100F57140 /* Build configuration list for PBXNativeTarget "iToneWIdgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49E81CA82F9BA67100F57140 /* Debug */,
+				49E81CA92F9BA67100F57140 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

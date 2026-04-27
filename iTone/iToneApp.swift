@@ -40,5 +40,43 @@ struct RootView: View {
                 }
         }
         .tint(.secondaryText)
+        .onOpenURL { url in
+            guard url.scheme == "iTone",
+                  let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            else { return }
+
+            coordinator.path = NavigationPath()
+
+            switch url.host {
+            case "album":
+                guard let id = components.intValue(for: "id"),
+                      let title = components.stringValue(for: "title")
+                else { return }
+                coordinator.navigateToAlbum(collectionId: id, title: title)
+
+            case "song":
+                guard let id = components.intValue(for: "id"),
+                      let name = components.stringValue(for: "name"),
+                      let artist = components.stringValue(for: "artist"),
+                      let collectionId = components.intValue(for: "collectionId"),
+                      let collectionName = components.stringValue(for: "collectionName"),
+                      let trackNumber = components.intValue(for: "trackNumber")
+                else { return }
+                let song = Song(
+                    id: id,
+                    name: name,
+                    artistName: artist,
+                    collectionId: collectionId,
+                    collectionName: collectionName,
+                    artworkUrl: components.stringValue(for: "artwork").flatMap { URL(string: $0) },
+                    previewUrl: components.stringValue(for: "preview").flatMap { URL(string: $0) },
+                    trackNumber: trackNumber
+                )
+                coordinator.navigateToPlayer(song: song, playlist: [song])
+
+            default:
+                break
+            }
+        }
     }
 }
